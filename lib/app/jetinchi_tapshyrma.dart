@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tapshyrma07_flutter/pages/home_page.dart';
 
 class JetinchiTapshyrma extends StatelessWidget {
-  JetinchiTapshyrma({Key? key}) : super(key: key);
+  const JetinchiTapshyrma({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

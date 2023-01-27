@@ -40,6 +40,8 @@ class _HomePage extends State<HomePage> {
                       setState(() {
                         index = 0;
                         answers.clear();
+                        trueAnswers.clear();
+                        falseAnswers.clear();
                         Navigator.pop(context);
                       });
                     },
