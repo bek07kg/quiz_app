@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tapshyrma07_flutter/components/quiz.dart';
-import 'package:tapshyrma07_flutter/components/result.dart';
+import 'package:tapshyrma07_flutter/components/quiz_button.dart';
+import 'package:tapshyrma07_flutter/components/result_button.dart';
+import 'package:tapshyrma07_flutter/model/quiz_model.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,15 +10,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  int index = 0;
+  List answers = <bool>[];
+  List trueAnswers = <bool>[];
+  List falseAnswers = <bool>[];
+
+  void chekc(bool value) {
+    if (quizzes[index].answer == value) {
+      answers.add(true);
+      trueAnswers.add(true);
+    } else {
+      answers.add(false);
+      falseAnswers.add(false);
+    }
+    setState(() {
+      if (quizzes[index] == quizzes.last) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text(
+                  "Сиз бул тесттен ...",
+                ),
+                content: Text(
+                    "Туура жооптор ${trueAnswers.length}. Ката жооптор ${falseAnswers.length}"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        index = 0;
+                        answers.clear();
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: const Text(
+                      "Жаныдан баштоо",
+                    ),
+                  ),
+                ],
+              );
+            });
+      } else {
+        index++;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff212121),
+      backgroundColor: const Color(0xff212121),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           "Тапшырма - 07",
           style: TextStyle(
             color: Colors.black,
@@ -27,31 +74,44 @@ class _HomePage extends State<HomePage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             Text(
-              "Кыргызстанда 7 область барбы?",
+              quizzes[index].question,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
-                fontSize: 32.0,
+                fontSize: 30.0,
               ),
             ),
-            Spacer(),
-            Quiz(button: true),
-            SizedBox(height: 20.0),
-            Quiz(button: false),
-            SizedBox(height: 50.0),
-            Row(
-              children: [
-                Result(icon: true),
-                Result(icon: false),
-              ],
+            const Spacer(),
+            QuizButton(
+                quizButton: true,
+                press: (variable) {
+                  chekc(variable);
+                }),
+            const SizedBox(height: 20.0),
+            QuizButton(
+                quizButton: false,
+                press: (variable) {
+                  chekc(variable);
+                }),
+            const SizedBox(height: 50.0),
+            SizedBox(
+              height: 40.0,
+              child: ListView.builder(
+                  itemCount: answers.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, i) {
+                    return answers[i]
+                        ? const ResultButton(resultButton: true)
+                        : const ResultButton(resultButton: false);
+                  }),
             ),
-            SizedBox(height: 50.0),
+            const SizedBox(height: 50.0),
           ],
         ),
       ),
